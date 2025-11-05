@@ -4,6 +4,7 @@ import { deleteFile, uploadFile } from "../../../../services/storageServices/min
 import config from "../../../../config/config"
 import fs from "fs/promises";
 import omitPassword from "../../../../utils/omitPassword";
+import { handleImage } from "../../../../utils/uploadImage";
 
 export const getAllPostService = async () => {
     const posts =  await prismaClient.post.findMany({
@@ -38,21 +39,16 @@ export const createPostService = async ({
     authorId: number;
     image?: Express.Multer.File;
 }) => {
-    let imageUrl = '';
+    let imageUrl: string | null = '';
     if(image) {
-        const objectName = `${Date.now()}-${image.originalname}`;
-        const filePath = path.resolve(image.path)
-        await uploadFile(config.minioBucketName, filePath, objectName)
-        await fs.unlink(filePath)
-
-        imageUrl = `${config.minioPublicUrl || 'http://localhost:9000'}/${config.minioBucketName}/${objectName}`
+        imageUrl = await handleImage(image, 'posts')
     }
 
     return await prismaClient.post.create({
         data: {
             title,
             content,
-            image: imageUrl,
+            image: imageUrl ?? '',
             authorId
         }
     })
@@ -71,20 +67,10 @@ export const updatePostService = async (
         return null
     }
 
-    let imageUrl = post.image
+    let imageUrl: string | null = post.image
 
     if (data.image) {
-        const objectName = `${Date.now()}-${data.image.originalname}`;
-        const filePath = path.resolve(data.image.path)
-        await uploadFile(config.minioBucketName, filePath, objectName)
-        await fs.unlink(filePath)
-
-        if(post.image) {
-            const oldObject = post.image.split('/').pop()
-            if (oldObject) await deleteFile(config.minioBucketName, oldObject)
-        }
-        
-        imageUrl = `${config.minioPublicUrl || 'http://localhost:9000'}/${config.minioBucketName}/${objectName}`
+        imageUrl = await handleImage(data.image, 'posts', post.image)
     }
 
     return await prismaClient.post.update({
@@ -92,7 +78,7 @@ export const updatePostService = async (
         data: {
             title: data.title ?? post.title,
             content: data.content ?? post.content,
-            image: imageUrl
+            image: imageUrl ?? post.image
         }
     })
 }
@@ -102,8 +88,7 @@ export const deletePostService = async (id:number) => {
     if (!post) return null;
 
     if (post.image) {
-        const objectName = post.image.split('/').pop()
-        if(objectName) await deleteFile(config.minioBucketName, objectName)
+        await handleImage(undefined, "posts", post.image, true);
     }
 
     await prismaClient.post.delete({ where: { id } })
