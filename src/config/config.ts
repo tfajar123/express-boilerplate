@@ -24,7 +24,6 @@ const config: Config = {
     nodemailerHost: process.env.NODEMAILER_HOST || '',
     nodemailerUser: process.env.NODEMAILER_USER || '',
     nodemailerPassword: process.env.NODEMAILER_PASSWORD || '',
-    
 }
 
 export default config

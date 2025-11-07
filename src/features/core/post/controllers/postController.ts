@@ -2,7 +2,6 @@ import { Request, Response } from "express"
 import { body, validationResult } from "express-validator"
 import { errorResponse, successResponse } from "../../../../utils/response";
 import { createPostService, deletePostService, getAllPostService, getPostByIdService, updatePostService } from "../services/postServices";
-import { error } from "console";
 
 export const createPostController = [
     body('title').notEmpty().withMessage('Title is required'),

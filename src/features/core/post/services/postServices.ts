@@ -1,8 +1,4 @@
-import path from "path"
 import { prismaClient } from "../../../../config/prisma"
-import { deleteFile, uploadFile } from "../../../../services/storageServices/minioServices"
-import config from "../../../../config/config"
-import fs from "fs/promises";
 import omitPassword from "../../../../utils/omitPassword";
 import { handleImage } from "../../../../utils/uploadImage";
 
