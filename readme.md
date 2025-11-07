@@ -1,7 +1,3 @@
-Terima kasih atas upload gambar tersebut. Berikut adalah README yang disesuaikan dengan struktur folder yang Anda tunjukkan:
-
----
-
 # Node.js TypeScript Prisma Project
 
 Proyek ini menggunakan Node.js dengan TypeScript dan Prisma untuk pengelolaan basis data. Berikut adalah petunjuk untuk membangun, menjalankan, dan mengelola proyek ini.
@@ -19,16 +15,16 @@ Sebelum memulai, pastikan Anda memiliki alat berikut terpasang di sistem Anda:
 
 1. **Clone repository**:
 
-   ```bash
-   git clone <repository_url>
-   cd <project_directory>
-   ```
+    ```bash
+    git clone <repository_url>
+    cd <project_directory>
+    ```
 
 2. **Install dependencies**:
    Instal semua dependensi yang diperlukan dengan perintah berikut:
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 
 ## Perintah-perintah
 
@@ -66,14 +62,14 @@ Untuk mengatur dan memigrasi skema basis data, Anda dapat menggunakan perintah-p
 
 - **Reset migrasi Prisma** (akan menghapus dan membuat ulang basis data):
 
-  ```bash
-  npx prisma migrate reset
-  ```
+    ```bash
+    npx prisma migrate reset
+    ```
 
 - **Menerapkan migrasi** (aplikasikan perubahan skema basis data):
-  ```bash
-  npx prisma migrate dev
-  ```
+    ```bash
+    npx prisma migrate dev
+    ```
 
 ### 5. Menjalankan Seed Data
 
@@ -103,13 +99,17 @@ Untuk menjalankan aplikasi dengan konfigurasi yang tepat, Anda perlu menyiapkan 
 
 ```env
 PORT=3000
-DATABASE_URL=postgresql://postgres:studio91@localhost:5432/siakad?schema=public
+NODE_ENV=development
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/yourdb?schema=public
 
 JWT_SECRET_KEY=123123123123
-JWT_REFRESH_SECRET_KEY=123123123123
 
-MINIO_accessKey=123123123123211111
-MINIO_secretKey=123123123123211111
+MINIO_PUBLIC_URL=http://localhost:9000
+MINIO_ENDPOINT=127.0.0.1
+MINIO_PORT=9000
+MINIO_ACCESS_KEY=admin
+MINIO_SECRET_KEY=admin123
+MINIO_BUCKET_NAME=bucket_name
 
 NODEMAILER_HOST="smtp.example.com"
 NODEMAILER_USER="user"
@@ -137,13 +137,15 @@ Berikut adalah gambaran umum tentang struktur proyek:
 siakad-backend/
 ├── dist/                         # Folder output build (dihasilkan setelah build)
 ├── prisma/                       # Folder untuk file Prisma (skema, migrasi, seeding)
-│   ├── schema.prisma             # File skema Prisma
-│   └── seed.ts                   # File untuk memasukkan data awal
+│   └── schema.prisma             # File skema Prisma
 ├── src/                          # Kode sumber aplikasi
 │   ├── config/                   # Folder untuk konfigurasi aplikasi
 │   ├── features/                 # Fitur-fitur aplikasi
 │   ├── middlewares/              # Folder untuk middleware
-│   └── routes/                   # Folder untuk routing aplikasi
+│   ├── routes/                   # Folder untuk routing aplikasi
+│   ├── services/                 # Folder untuk services (minio, nodemailer)
+│   ├── types/                    # Deklarasi global type
+│   └── utils/                    # Folder untuk utility
 ├── .env                          # File environment untuk konfigurasi aplikasi
 ├── docker-compose.yml            # File konfigurasi Docker Compose
 ├── Dockerfile                    # File konfigurasi Docker
@@ -162,7 +164,3 @@ Jika Anda menghadapi masalah saat menjalankan proyek, pastikan untuk memeriksa h
 ## Lisensi
 
 Proyek ini dilisensikan di bawah [Lisensi MIT](LICENSE).
-
----
-
-Dengan dokumentasi ini, Anda dapat mengikuti langkah-langkah yang jelas untuk membangun dan menjalankan proyek Anda menggunakan berbagai perintah yang telah disediakan.
